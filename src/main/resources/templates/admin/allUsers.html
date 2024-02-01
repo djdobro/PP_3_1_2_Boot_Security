@@ -34,6 +34,7 @@
         <th>Role</th>
         <th>Password</th>
         <th>Edit</th>
+        <th>Delete</th>
     </tr>
     </thead>
 
@@ -53,7 +54,7 @@
         </td>
         <td>
             <form th:action="@{'/admin/delete/' + ${user.getId()}}" th:method="post">
-                <input type="hidden" name="_method" value="delete" />
+<!--                <input type="hidden" name="_method" value="delete" />-->
                 <button type="submit">Delete</button>
             </form>
         </td>
