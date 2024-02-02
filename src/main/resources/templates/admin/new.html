@@ -57,6 +57,12 @@
                th:field="*{roles}"/>
         <input type="submit" value="Create">
     </label>
+
+    <div th:if="${#fields.hasErrors()}">
+        <div style="color: red" th:each="error : ${#fields.errors('*')}">
+            <span th:text="${error}"></span>
+        </div>
+    </div>
 </form>
 
 </body>

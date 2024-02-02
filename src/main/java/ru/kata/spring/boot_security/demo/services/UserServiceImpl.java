@@ -51,20 +51,20 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User update(User user) {
+    public void update(User user) {
         User userFromDb = userRepository.getById(user.getId());
-        if (userFromDb == null) {
-            throw new EntityNotFoundException("Пользователь не найден");
-        }
         userFromDb.setName(user.getName());
         userFromDb.setLastname(user.getLastname());
         userFromDb.setAge(user.getAge());
         userFromDb.setEmail(user.getEmail());
-        if (user.getPassword() != null && !user.getPassword().isEmpty()) {
+        if (user.getPassword() != null && !user.getPassword().isEmpty() && !user.getPassword().equals(userFromDb.getPassword())) {
             userFromDb.setPassword(passwordEncoder.encode(user.getPassword()));
         }
-        userFromDb.setRoles(user.getRoles());
-        return userRepository.save(userFromDb);
+        if (user.getRoles() != null && !user.getRoles().isEmpty()) {
+            userFromDb.getRoles().clear();
+            userFromDb.getRoles().addAll(user.getRoles());
+        }
+        userRepository.save(userFromDb);
     }
 
     @Override
@@ -73,6 +73,7 @@ public class UserServiceImpl implements UserService {
         if (userFromDb != null) {
             throw new DuplicateKeyException("Такой пользователь уже существует");
         }
+        user.setRoles(user.getRoles());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
     }

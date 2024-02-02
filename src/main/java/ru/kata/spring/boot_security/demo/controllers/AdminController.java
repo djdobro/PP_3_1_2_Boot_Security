@@ -4,6 +4,7 @@ package ru.kata.spring.boot_security.demo.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.kata.spring.boot_security.demo.models.User;
 import ru.kata.spring.boot_security.demo.repositories.RoleRepository;
@@ -38,7 +39,11 @@ public class AdminController {
     }
 
     @PostMapping("/new")
-    public String addNewUserToDb(@ModelAttribute("user") @Valid User user) {
+    public String addNewUserToDb(@ModelAttribute("user") @Valid User user, BindingResult bindingResult, Model model) {
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("roles", roleRepository.findAll());
+            return "admin/new";
+        }
         userServiceImpl.save(user);
         return "redirect:/admin";
     }
@@ -58,8 +63,6 @@ public class AdminController {
 
     @PostMapping("/delete/{id}")
     public String deleteUser(@PathVariable("id") Long id) {
-        User user = userServiceImpl.getById(id);
-        user.getRoles().clear();
         userServiceImpl.delete(userServiceImpl.getById(id));
         return "redirect:/admin";
     }
