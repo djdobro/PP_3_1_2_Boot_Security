@@ -45,9 +45,8 @@
     <label>Role:
         <input type="checkbox" name="roles"
                th:each="role : ${roles}"
-               th:text="${role.getName()}"
-               th:value="${role.getId()}"
-               th:field="*{roles}"/>
+               th:text="${role.name}"
+               th:value="${role.id}"/>
         <input type="submit" value="Edit">
     </label>
 </form>

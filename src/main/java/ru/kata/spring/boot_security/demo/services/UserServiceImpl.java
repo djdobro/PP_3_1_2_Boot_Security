@@ -51,7 +51,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void update(User user) {
+    public User update(User user) {
         User userFromDb = userRepository.getById(user.getId());
         userFromDb.setName(user.getName());
         userFromDb.setLastname(user.getLastname());
@@ -60,11 +60,8 @@ public class UserServiceImpl implements UserService {
         if (user.getPassword() != null && !user.getPassword().isEmpty() && !user.getPassword().equals(userFromDb.getPassword())) {
             userFromDb.setPassword(passwordEncoder.encode(user.getPassword()));
         }
-        if (user.getRoles() != null && !user.getRoles().isEmpty()) {
-            userFromDb.getRoles().clear();
-            userFromDb.getRoles().addAll(user.getRoles());
-        }
-        userRepository.save(userFromDb);
+        userFromDb.setRoles(user.getRoles());
+        return userRepository.save(userFromDb);
     }
 
     @Override
